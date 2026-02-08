@@ -4,61 +4,39 @@
 
 using namespace std;
 
+// Function Prototypes
 void selectUserStatus(int *statusPtr); 
 void handleAdmission();
 void handleFreshman();
 void handleGeneral();
 
-int main(){
+int main() {
     SetConsoleOutputCP(65001);
     SetConsoleCP(65001);
 
     int select = 0; 
     string name;
-    string messages;
 
-    cout << "Chatbot : สวัสดีครับ! ยินดีต้อนรับสู่ ENGR CMU Chat Bot" << endl;
-    cout << "Chatbot : ก่อนอื่น บอกชื่อของคุณให้ผมรู้จักหน่อยได้ไหมครับ?" << endl;
+    cout << "Chatbot : สวัสดีครับ! ขอทราบชื่อของคุณหน่อยครับ: " << "\n";
     cout << "User : ";
     getline(cin, name);
-
-    cout << "Chatbot : ยินดีที่ได้รู้จักครับ คุณ " << name << "! เพื่อความแม่นยำของข้อมูล" << endl;
-
-   while (true) {
-        selectUserStatus(&select);
-
-        if (select == 1) {
-            handleAdmission();
-            break;
-        } else if (select == 2) {
-            handleFreshman();
-            break;
-        } else if (select == 3) {
-            handleGeneral();
-            break;
-        } else {
-            cout << "Chatbot : เลือกเมนู 1-3 นะครับ" << endl;
-        }
-    }
+    cout << "Chatbot : ยินดีที่ได้รู้จักครับ คุณ " << name << "!" << endl;
 
     while (true) {
-    selectUserStatus(&select);
-    cin.ignore();
-    if (select == 1) {
-        handleAdmission();
-    } else if (select == 2) {
-        handleFreshman();
-    } else if (select == 3) {
-        handleGeneral();
+        selectUserStatus(&select); // ฟังก์ชันนี้จะวนลูปจนกว่าจะได้ 1-3
+        cin.ignore(); // ล้าง Newline ที่ค้างอยู่จากการกด Enter ใน selectUserStatus
+
+        if (select == 1) handleAdmission();
+        else if (select == 2) handleFreshman();
+        else if (select == 3) handleGeneral();
+        
+        // หมายเหตุ: หลังจาก Handler จบ (เช่น พิมพ์ 'ออก') 
+        // มันจะวนกลับไปที่ selectUserStatus ใหม่โดยอัตโนมัติ
     }
-           
     return 0;
 }
 
-}
-
 void selectUserStatus(int *statusPtr) {
-
     const char *menu[] = {
         "สนใจเข้าเรียน (Admission)",
         "นักศึกษาใหม่ปี 1 (Freshman)",
@@ -66,60 +44,67 @@ void selectUserStatus(int *statusPtr) {
     };
 
     int choice;
-    cout << "-------------------------" << endl;
-    cout << "Chatbot : กรุณาเลือกสถานะของคุณหน่อยนะครับ:" << endl;
-
-    for (int i = 0; i < 3; i++) {
-        cout << "[" << i + 1 << "] " << *(menu + i) << endl;
+    while (true) {
+        cout << "-------------------------" << endl;
+        cout << "Chatbot : กรุณาเลือกสถานะของคุณหน่อยนะครับ:" << endl;
+        for (int i = 0; i < 3; i++) {
+            cout << "[" << i + 1 << "] " << *(menu + i) << endl;
+        }
+        cout << "-------------------------" << endl;
+        cout << "User (เลือกเลข 1-3): ";
+        
+        if (cin >> choice) {
+            *statusPtr = choice;
+            break; 
+        } else {
+            cout << "กรุณากรอกเฉพาะตัวเลข 1, 2 หรือ 3 เท่านั้นครับ" << endl;
+            cin.clear(); // ล้างสถานะ Error ของ cin
+            cin.ignore(1000, '\n'); // ข้ามขยะที่ User พิมพ์ค้างไว้ (ได้สูงสุด 1000 ตัวอักษร)
+        }
     }
-    cout << "-------------------------" << endl;
-    cout << "User (เลือกเลข): ";
-    cin >> choice;
-
-    *statusPtr = choice; 
 }
 
-void handleAdmission() {
-    string userInput;
-    const char *keywords[] = {"รอบรับ", "คะแนน", "เครื่องกล", "คอมพิวเตอร์", "ออก"};
-    const char *responses[] = {
-        "คณะเราเปิดรับ 3 รอบหลักครับ: 1.Portfolio 2.Quota 3.Admission",
-        "คะแนนย้อนหลัง 3 ปี ของวิศวะ มช. คุณสามารถดูได้ที่เว็บไซต์ admission.reg.cmu.ac.th ครับ",
-        "วิศวะเครื่องกล (Mechanical) จะเน้นเรื่องพลังงาน การออกแบบเครื่องจักร และยานยนต์ครับ",
-        "วิศวะคอมพิวเตอร์ (Computer) จะเรียนทั้ง Hardware, Software และ Network ครับ",
-        "ขอบคุณที่สนใจ Entaneer CMU นะครับ! (กำลังกลับสู่เมนูหลัก...)"
-    };
-    int numItems = 5;
+#include <vector>
 
-    cout << "\nChatbot: ยินดีมากเลยครับที่คุณสนใจมาเป็นครอบครัว Entaneer CMU!" << endl;
+void handleAdmission() {
+    // ใช้ Vector เก็บ Keyword (Lecture 17)
+    vector<string> keywords = {"รอบรับ", "คะแนน", "เครื่องกล", "คอมพิวเตอร์", "ออก"};
+    
+    // คำตอบยังคงใช้ Array of Pointers เพื่อความประหยัด RAM (Lecture 16) [cite: 617]
+    const char *responses[] = {
+        "คณะเราเปิดรับ 3 รอบหลักครับ...",
+        "คะแนนย้อนหลังดูได้ที่เว็บไซต์...",
+        "วิศวะเครื่องกลเน้นการออกแบบเครื่องจักร...",
+        "วิศวะคอมฯ เรียนทั้ง Soft/Hard...",
+        "ลาก่อนครับ!"
+    };
+
+    string userInput;
+    cout << "\n--- เข้าสู่โหมด Admission ---" << endl;
+    cout << "Chatbot: ยินดีมากเลยครับที่คุณสนใจมาเป็นครอบครัว Entaneer CMU!" << endl;
+    cout << "คณะเรามีสาขาที่น่าสนใจเพียบเลย คุณอยากทราบข้อมูลส่วนไหนครับ?" << endl;
+    cout << "เช่น 'รอบรับเข้า', 'คะแนนย้อนหลัง' หรือ 'สาขาที่เปิดรับ'" << endl;
     
     while(true) {
-        cout << "\n(พิมพ์ 'ออก' เพื่อกลับเมนูหลัก) \nUser: ";
+        cout << "User: ";
         getline(cin, userInput);
 
         bool found = false;
-        for(int i = 0; i < numItems; i++) {
-            if (userInput.find(*(keywords + i)) != string::npos) {
+        for(size_t i = 0; i < keywords.size(); i++) {
+            if (userInput.find(keywords[i]) != string::npos) {
                 cout << "Chatbot: " << *(responses + i) << endl;
+                if (i == 4) return; // ออกจากฟังก์ชัน
                 found = true;
-                
-                if (i == 4) return; 
+                cout << "\n**(พิมพ์ 'ออก' เพื่อกลับเมนูหลัก)** \nUser: ";
                 break;
             }
         }
-
-        if (!found) {
-            cout << "Chatbot: ขอโทษครับ ผมยังไม่มีข้อมูลส่วนนี้ ลองถามเรื่อง 'รอบรับ' หรือ 'คะแนน' ดูไหมครับ?" << endl;
-        }
+        if(!found) cout << "ไม่พบข้อมูล ลองถามใหม่อีกครั้งครับ" << endl;
     }
 }
 
 void handleFreshman() {
-   
-    cout << "\nChatbot: ยินดีด้วยนะลูกช้างใหม่! การเริ่มต้นชีวิตในรั้ววิศวะอาจจะงงหน่อย แต่ผมพร้อมเป็นคู่หูให้ครับ" << endl;
-
-    cout << "อยากรู้เรื่องอะไรถามมาได้เลย เช่น 'ตารางสอน', 'ขึ้นดอย' หรือ 'ชุดนักศึกษา เเละอื่นๆ'" << endl;
-
+    cout << "\nChatbot: ยินดีด้วยนะลูกช้างใหม่! ข้อมูลตารางสอนจะประกาศเร็ว ๆ นี้ครับ" << endl;
 }
 
 void handleGeneral() {
