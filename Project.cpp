@@ -15,6 +15,7 @@ int main(){
 
     int select = 0; 
     string name;
+    string messages;
 
     cout << "Chatbot : สวัสดีครับ! ยินดีต้อนรับสู่ ENGR CMU Chat Bot" << endl;
     cout << "Chatbot : ก่อนอื่น บอกชื่อของคุณให้ผมรู้จักหน่อยได้ไหมครับ?" << endl;
@@ -28,17 +29,32 @@ int main(){
 
         if (select == 1) {
             handleAdmission();
+            break;
         } else if (select == 2) {
             handleFreshman();
+            break;
         } else if (select == 3) {
             handleGeneral();
+            break;
         } else {
             cout << "Chatbot : เลือกเมนู 1-3 นะครับ" << endl;
         }
-        
-        cout << "\n--- กลับเข้าสู่เมนูหลัก ---\n" << endl;
     }
+
+    while (true) {
+    selectUserStatus(&select);
+    cin.ignore();
+    if (select == 1) {
+        handleAdmission();
+    } else if (select == 2) {
+        handleFreshman();
+    } else if (select == 3) {
+        handleGeneral();
+    }
+           
     return 0;
+}
+
 }
 
 void selectUserStatus(int *statusPtr) {
@@ -64,9 +80,38 @@ void selectUserStatus(int *statusPtr) {
 }
 
 void handleAdmission() {
+    string userInput;
+    const char *keywords[] = {"รอบรับ", "คะแนน", "เครื่องกล", "คอมพิวเตอร์", "ออก"};
+    const char *responses[] = {
+        "คณะเราเปิดรับ 3 รอบหลักครับ: 1.Portfolio 2.Quota 3.Admission",
+        "คะแนนย้อนหลัง 3 ปี ของวิศวะ มช. คุณสามารถดูได้ที่เว็บไซต์ admission.reg.cmu.ac.th ครับ",
+        "วิศวะเครื่องกล (Mechanical) จะเน้นเรื่องพลังงาน การออกแบบเครื่องจักร และยานยนต์ครับ",
+        "วิศวะคอมพิวเตอร์ (Computer) จะเรียนทั้ง Hardware, Software และ Network ครับ",
+        "ขอบคุณที่สนใจ Entaneer CMU นะครับ! (กำลังกลับสู่เมนูหลัก...)"
+    };
+    int numItems = 5;
+
     cout << "\nChatbot: ยินดีมากเลยครับที่คุณสนใจมาเป็นครอบครัว Entaneer CMU!" << endl;
-    cout << "คณะเรามีสาขาที่น่าสนใจเพียบเลย คุณอยากทราบข้อมูลส่วนไหนครับ?" << endl;
-    cout << "เช่น 'รอบรับเข้า', 'คะแนนย้อนหลัง' หรือ 'สาขาที่เปิดรับ'" << endl;
+    
+    while(true) {
+        cout << "\n(พิมพ์ 'ออก' เพื่อกลับเมนูหลัก) \nUser: ";
+        getline(cin, userInput);
+
+        bool found = false;
+        for(int i = 0; i < numItems; i++) {
+            if (userInput.find(*(keywords + i)) != string::npos) {
+                cout << "Chatbot: " << *(responses + i) << endl;
+                found = true;
+                
+                if (i == 4) return; 
+                break;
+            }
+        }
+
+        if (!found) {
+            cout << "Chatbot: ขอโทษครับ ผมยังไม่มีข้อมูลส่วนนี้ ลองถามเรื่อง 'รอบรับ' หรือ 'คะแนน' ดูไหมครับ?" << endl;
+        }
+    }
 }
 
 void handleFreshman() {
