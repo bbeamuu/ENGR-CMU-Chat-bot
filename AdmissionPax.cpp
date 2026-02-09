@@ -28,12 +28,12 @@ void handleMajorDetails() {
 // --- ฟังก์ชันหลักสำหรับการรับเข้าศึกษา ---
 void handleAdmission() {
     string input;
-    cout << "AI: คุณสนใจการรับเข้ารอบไหนเป็นพิเศษไหมครับ? (รอบ 1, 2, 3 หรือ 4)" << endl;
+    cout << "สนใจวางแผนเข้าวิศวฯ รอบไหนเป็นพิเศษไหมครับ? จะเป็นรอบ Portfolio (รอบ 1), โควตา (รอบ 2), Admission (รอบ 3) หรือรอบเก็บตก (รอบ 4) บอกผมได้เลยนะ เดี๋ยวผมช่วยเช็กรายละเอียดให้ครับ" << endl;
     cout << "User: ";
     getline(cin, input);
 
-    if (hasKeyword(input, "1") || hasKeyword(input, "พอร์ต")) {
-        cout << "AI: รอบ 1 Portfolio เน้นสะสมผลงานและการทำกิจกรรมครับ" << endl;
+    if (hasKeyword(input, "1") || hasKeyword(input, "พอร์ต") || hasKeyword(input, "Portfolio")) {
+        cout << "รอบ 1 หรือรอบ Portfolio จะเน้นดูที่ผลงานและความสามารถของเราเป็นหลักครับ โดยจะพิจารณาจากแฟ้มสะสมผลงาน เกรดเฉลี่ย (GPAX) และการสัมภาษณ์ครับ ความพิเศษของรอบนี้คือไม่ต้องใช้คะแนนสอบข้อเขียนอย่าง TGAT/TPAT เลยครับ" << endl;
         handleMajorDetails(); // ถามลึกลงไปเรื่องคณะต่อ
     } 
     else if (hasKeyword(input, "3") || hasKeyword(input, "แอดมิชชั่น")) {
@@ -52,7 +52,7 @@ int main() {
     string input;
     bool keepRunning = true;
 
-    cout << "AI: สวัสดีครับ ผมคือ AI ผู้ช่วยตอบคำถาม มีอะไรให้ช่วยไหมครับ?" << endl;
+    cout << "AI: สวัสดีครับ ยินดีต้อนรับสู่ ENGR CMU bot ครับ มีข้อมูลส่วนไหนของคณะวิศวกรรมศาสตร์ที่อยากให้ผมช่วยหาให้ไหมครับ? พิมพ์ถามได้เลย!" << endl;
 
     while (keepRunning) {
         cout << "\nUser: ";
