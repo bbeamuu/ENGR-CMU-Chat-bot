@@ -1,0 +1,74 @@
+int main() {
+    if (!glfwInit()) return 1;
+    GLFWwindow* window = glfwCreateWindow(600, 800, "ENGR CMU Chatbot (GUI Version)", NULL, NULL);
+    glfwMakeContextCurrent(window);
+
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+
+    // 1. ดึง IO ของ ImGui มาจัดการเรื่อง Font
+ImGuiIO& io = ImGui::GetIO();
+
+// 2. โหลดไฟล์ Font ภาษาไทย (เช่น Tahoma, Arial หรือ TH Sarabun) 
+// ต้องระบุ Path ที่อยู่ของไฟล์ .ttf ในเครื่องคุณ (ปกติ Windows จะอยู่ที่ C:/Windows/Fonts/)
+io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\tahoma.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesThai());
+
+// 3. (Optional) หากคุณมีไฟล์ Font ในโฟลเดอร์โปรเจค ก็ระบุชื่อไฟล์ได้เลย
+// io.Fonts->AddFontFromFileTTF("THSarabunNew.ttf", 20.0f, NULL, io.Fonts->GetGlyphRangesThai());
+
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 130");
+
+    // จองพื้นที่ใน Heap สำหรับสมองบอท (Lecture 17)
+    ChatbotLogic *brain = new ChatbotLogic();
+    static char inputBuffer[256] = "";
+
+    while (!glfwWindowShouldClose(window)) {
+        glfwPollEvents();
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        // ตั้งค่าหน้าต่างแชทให้เต็มจอ
+        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
+        ImGui::Begin("Chatbot Console", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+
+        // แสดงประวัติการสนทนา
+        ImGui::BeginChild("ChatRegion", ImVec2(0, -ImGui::GetFrameHeightWithSpacing() * 2));
+        for (const auto& log : brain->chatHistory) {
+            ImGui::TextWrapped("%s", log.c_str());
+        }
+        if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY()) ImGui::SetScrollHereY(1.0f);
+        ImGui::EndChild();
+
+        ImGui::Separator();
+
+        // ช่องรับข้อมูล
+        if (ImGui::InputText("##Input", inputBuffer, 256, ImGuiInputTextFlags_EnterReturnsTrue)) {
+            brain->processInput(inputBuffer);
+            memset(inputBuffer, 0, sizeof(inputBuffer));
+            ImGui::SetKeyboardFocusHere(-1); 
+        }
+        ImGui::SameLine();
+        ImGui::TextDisabled("(กด Enter)");
+
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        glfwSwapBuffers(window);
+    }
+
+    // คืนพื้นที่หน่วยความจำ (Lecture 17)
+    delete brain;
+    brain = NULL;
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+    glfwDestroyWindow(window);
+    glfwTerminate();
+
+    return 0;
+}
