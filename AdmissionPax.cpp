@@ -32,12 +32,16 @@ void handleAdmission() {
     cout << "User: ";
     getline(cin, input);
 
-    if (hasKeyword(input, "1") || hasKeyword(input, "พอร์ต") || hasKeyword(input, "Portfolio")) {
+    if (hasKeyword(input, "1") || hasKeyword(input, "พอร์ต") || hasKeyword(input, "Portfolio")|| hasKeyword(input, "เกณฑ์การให้คะเเนน")) {
         cout << "รอบ 1 หรือรอบ Portfolio จะเน้นดูที่ผลงานและความสามารถของเราเป็นหลักครับ โดยจะพิจารณาจากแฟ้มสะสมผลงาน เกรดเฉลี่ย (GPAX) และการสัมภาษณ์ครับ ความพิเศษของรอบนี้คือไม่ต้องใช้คะแนนสอบข้อเขียนอย่าง TGAT/TPAT เลยครับ" << endl;
         handleMajorDetails(); // ถามลึกลงไปเรื่องคณะต่อ
     } 
-    else if (hasKeyword(input, "3") || hasKeyword(input, "แอดมิชชั่น")) {
+    else if (hasKeyword(input, "3") || hasKeyword(input, "แอดมิชชั่น")|| hasKeyword(input, "คะเเนนอื่นๆ")) {
         cout << "AI: รอบ 3 Admission จะใช้คะแนนสอบส่วนกลางเป็นหลักครับ" << endl;
+        handleMajorDetails(); // ถามลึกลงไปเรื่องคณะต่อ
+    }
+    else if (hasKeyword(input, "4") || hasKeyword(input, "เก็บตก")|| hasKeyword(input, "คะเเนน")) {
+        cout << "AI: รอบ 4 หรือรอบเก็บตก จะใช้คะแนนสอบส่วนกลางเป็นหลักครับ" << endl;
         handleMajorDetails(); // ถามลึกลงไปเรื่องคณะต่อ
     }
     else {
