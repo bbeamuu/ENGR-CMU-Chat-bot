@@ -25,8 +25,8 @@ int main() {
         "Electrical",
         "Civil",
         "Environmental",
-        "Robotics Engineering and Artificial Intelligence",
-        "Mining and Petroleum Engineering",
+        "REAI",
+        "Mining&Petroleum",
         "Industrial Engineering",
         "ISNE"
     };
@@ -35,8 +35,8 @@ int main() {
     string regularMajors[] = {
         "Computer","Mechanical","Semiconductor","Integrated",
         "Electrical","Civil","Environmental",
-        "Robotics Engineering and Artificial Intelligence",
-        "Mining and Petroleum","Industrial"
+        "REAI",
+        "Mining&Petroleum","Industrial"
     };
 
     string regularDesc[] = {
@@ -47,7 +47,7 @@ int main() {
         "Electrical (Regular): ระบบไฟฟ้าและพลังงาน",
         "Civil (Regular): โครงสร้าง อาคาร ถนน สะพาน",
         "Environmental (Regular): การจัดการสิ่งแวดล้อม",
-        "Robotics & AI (Regular): หุ่นยนต์และปัญญาประดิษฐ์",
+        "REAI (Regular): หุ่นยนต์และปัญญาประดิษฐ์",
         "Mining & Petroleum (Regular): เหมืองแร่และปิโตรเลียม",
         "Industrial (Regular): การจัดการอุตสาหกรรม"
     };
@@ -66,7 +66,7 @@ int main() {
     //INTER
     string interMajors[] = {
         "Mechanical","Integrated","Electrical",
-        "Civil Engineering","ISNE",
+        "Civil","ISNE",
         "Industrial Engineering and Logistics Management"
     };
 
@@ -74,7 +74,7 @@ int main() {
         "Mechanical (International): หลักสูตรภาษาอังกฤษ",
         "Integrated (International): IC Design ภาคนานาชาติ",
         "Electrical (International): ระบบไฟฟ้าอินเตอร์",
-        "Civil Engineering (International): วิศวกรรมโยธาอินเตอร์",
+        "Civil (International): วิศวกรรมโยธาอินเตอร์",
         "ISNE (International): Information Systems & Network English Program",
         "Industrial (International): โลจิสติกส์และการจัดการภาษาอังกฤษ"
     };
@@ -153,7 +153,7 @@ int main() {
         }
 
 
-        string imagePath = majorList[majorChoice - 1] + suffix;
+        string imagePath = "studyplan_photo\\" + majorList[majorChoice - 1] + suffix;
 
         cout << "\nกำลังเปิดรูป...\n";
         openImage(imagePath);
